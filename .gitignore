@@ -1,0 +1,6 @@
+/*
+!.gitignore
+!kitty/
+!kitty/*
+kitty/init/
+kitty/env/
