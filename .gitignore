@@ -3,6 +3,7 @@
 !.gitignore
 
 !makefile
+!README.md
 
 #i3
 !i3/
