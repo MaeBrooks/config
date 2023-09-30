@@ -1,7 +1,11 @@
 Script=./.scripts
 export HOME=/home/debian
 
-default: checks all
+default: info checks all
+
+info:
+	@echo "Running setup scripts! This will install assuming HOME=$(HOME)"
+	@echo ""
 
 checks:
 	$(Script)/check.bash
