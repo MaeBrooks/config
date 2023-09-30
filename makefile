@@ -18,7 +18,7 @@ info:
 checks:
 	$(Scripts)/check.bash
 
-all: zsh curl wget feh i3 ripgrep neovim node rust golang lazygit
+all: zsh kitty curl wget feh i3 ripgrep neovim node rust golang lazygit docker docker-compose
 
 zsh: $(Scripts)/zsh.zsh
 	$(Scripts)/zsh.zsh
@@ -53,5 +53,12 @@ rust: $(Scripts)/rust.zsh
 golang: $(Scripts)/golang.zsh
 	$(Scripts)/golang.zsh
 
-lazygit: $(Scripts)/lazygit.zsh
+lazygit: golang $(Scripts)/lazygit.zsh
 	$(Scripts)/lazygit.zsh
+
+docker: $(Scripts)/docker.zsh
+	$(Scripts)/docker.zsh
+
+docker-compose: docker $(Scripts)/docker-compose.zsh
+	$(Scripts)/docker-compose.zsh
+
