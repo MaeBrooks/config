@@ -1,7 +1,21 @@
 #!/bin/zsh
 
+source ~/.zshrc
+
+function install() {
+  if exists apt ;
+  then
+    sudo apt install -y $@
+    return $?
+  fi
+
+  echo "Cannot install '@a' no package manager found"
+  return 1
+}
+export install
+
 function exists() {
-  whatis $1 > /dev/null
+  type $1 > /dev/null
   return $?;
 }
 export exists
@@ -10,10 +24,28 @@ function exit_if_exists() {
   local code="${2:=0}"
   if exists $1 ;
   then
+    if [ -n "$3" ] ; then
+      echo $3
+    fi
+
     exit $code
   fi
 }
 export exit_if_exists
+
+function exit_if_not_exists() {
+  local code="${2:=0}"
+  exists $1
+  if [ $? -ne 0 ] ;
+  then
+    if [ -n "$3" ] ; then
+      echo $3
+    fi
+
+    exit $code
+  fi
+}
+export exit_if_not_exists
 
 function fail() {
   local reason="${1:=Failure, reason not passed}"
@@ -44,12 +76,10 @@ function exit_if_success() {
 }
 export exit_if_success
 
-function try() {
-  if $1 ;
-  then
-    printf ''
-  else
-    fail $2
-  fi
+function concat() {
+  local str=$1
+  local file=$2
+  echo $str >> $file
+  return $?
 }
-export try
+export concat
