@@ -1,10 +1,10 @@
 include ~/.config/i3/theme
 
 default_border pixel 0
-gaps outer 25
+gaps outer 40
+workspace_layout tabbed
 
 font pango:"JetBrains Mono Regular" 10
-
 
 # some login and wireless
 ### Start XDG autostart .desktop files using dex. See also
