@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-source ~/.zshrc
+source $HOME/.zshrc
 
 function install() {
   if exists apt ;

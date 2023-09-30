@@ -19,6 +19,7 @@ function defer_to_cleanup() {
 
   echo "Failed: $1"
   mv $backup_dir $target_dir
+  exit 1
 }
 
 if [ -d $target_dir ]; then
