@@ -1,7 +1,5 @@
 include ~/.config/i3/theme
 
-default_border pixel 0
-gaps outer 40
 workspace_layout tabbed
 
 font pango:"JetBrains Mono Regular" 10
@@ -38,7 +36,6 @@ bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 bindsym $mod+w layout tabbed
-bindsym $mod+space focus mode_toggle
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3"
