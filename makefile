@@ -18,7 +18,8 @@ info:
 checks:
 	$(Scripts)/check.bash
 
-all: zsh kitty curl wget feh i3 ripgrep neovim node rust golang lazygit docker docker-compose
+all: zsh kitty curl \
+	wget feh i3 ripgrep neovim node rust golang lazygit docker docker-compose fly terraform
 
 zsh: $(Scripts)/zsh.zsh
 	$(Scripts)/zsh.zsh
@@ -62,3 +63,8 @@ docker: $(Scripts)/docker.zsh
 docker-compose: docker $(Scripts)/docker-compose.zsh
 	$(Scripts)/docker-compose.zsh
 
+fly: $(Scripts)/fly.zsh
+	$(Scripts)/fly.zsh
+
+terraform: $(Scripts)/terraform.zsh
+	$(Scripts)/terraform.zsh
