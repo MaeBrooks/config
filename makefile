@@ -19,7 +19,7 @@ checks:
 	$(Scripts)/check.bash
 
 all: zsh kitty curl \
-	wget feh i3 ripgrep neovim node rust golang lazygit docker docker-compose fly terraform
+	wget feh i3 ripgrep neovim node rust golang lazygit docker docker-compose fly terraform emacs
 
 zsh: $(Scripts)/zsh.zsh
 	$(Scripts)/zsh.zsh
@@ -68,3 +68,7 @@ fly: $(Scripts)/fly.zsh
 
 terraform: $(Scripts)/terraform.zsh
 	$(Scripts)/terraform.zsh
+
+emacs: $(Scripts)/emacs.zsh
+	$(Scripts)/emacs.zsh
+

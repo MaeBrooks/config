@@ -6,7 +6,13 @@
 !README.md
 
 #i3
-!i3/
+!i3
+
+#emacs
+!emacs/
+emacs/elpa/
+emacs/auto-save-list/
+emacs/tutorial/
 
 # kitty
 !kitty/
