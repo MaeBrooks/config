@@ -9,12 +9,12 @@
   (unless (package-installed-p name) (package-install name)))
 
 (defun configure-emacs-globals ()
-  (setq auto-save-default nil))
+  (setq auto-save-default nil)
+  (setq-default tab-width 2)
+  (setq tab-stop-list)
+  (setq-default indent-tabs-mode t)
+  (setq-default tab-width 2))
 (configure-emacs-globals)
-
-(defun configure-git ()
-  (install 'magit))
-(configure-git)
 
 ;; theme
 (defun configure-ui ()
@@ -50,12 +50,37 @@
 )
 (configure-ui)
 
+(defun configure-git ()
+  (install 'magit))
+(configure-git)
+
+(defun configure-utils ()
+  (install 'which-key)
+  (which-key-mode))
+(configure-utils)
+
+;; (define-key global-map [remap find-file] #'helm-find-files)
+;; (define-key global-map [remap execute-extended-command] #'helm-M-x)
+;; (define-key global-map [remap switch-to-buffer] #'helm-mini)
+
+(defun configure-lsp ()
+  (install 'lsp-mode)
+  (require 'lsp-mode)
+  (setq lsp-keymap-prefix "C-c l")
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (lsp-gopls)
+  )
+(configure-lsp)
+
+Warning (treesit): Cannot activate tree-sitter, because Emacs is not compiled with tree-sitter library
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(tree-sitter-langs tree-sitter dracula-theme magit)))
+ '(package-selected-packages
+   '(which-key evil tree-sitter-langs tree-sitter dracula-theme magit)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

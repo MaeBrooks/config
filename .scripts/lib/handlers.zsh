@@ -2,6 +2,12 @@
 
 source $HOME/.zshrc
 
+function exists() {
+  type $1 > /dev/null
+  return $?;
+}
+export exists
+
 function install() {
   if exists apt ;
   then
@@ -14,12 +20,6 @@ function install() {
 }
 export install
 
-function exists() {
-  type $1 > /dev/null
-  return $?;
-}
-export exists
-
 function exit_if_exists() {
   local code="${2:=0}"
   if exists $1 ;
@@ -30,8 +30,56 @@ function exit_if_exists() {
 
     exit $code
   fi
-}
+v}
 export exit_if_exists
+
+function is_installed() {
+  local code="{2:=0}"
+
+  if exists dpkg ; then
+    if dpkg -S "$1" >> /dev/null ; then
+      return $code
+    fi
+
+    return 1
+  fi
+
+  echo "is_installed not supported for this package mangaer / system, please update it to do so"
+  exit 1
+}
+export is_installed
+
+function is_not_installed() {
+  local code="${2:=0}"
+    
+  if is_installed "$1" ; then
+    return 1
+  fi
+
+  return $code
+}
+export is_not_installed
+
+function exit_if_installed() {
+  local code="${2:=0}"
+  
+  if is_installed "$1" ; then
+   exit $code
+  fi
+}
+export exit_if_installed
+
+function exit_if_not_installed() {
+  local code="${2:=0}"
+  if is_not_installed "$1" ; then
+    if [ -n "$3" ] ; then
+      echo $3
+    fi
+    
+    exit $code
+  fi
+}
+export exit_if_not_installed
 
 function exit_if_not_exists() {
   local code="${2:=0}"

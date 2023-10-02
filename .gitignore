@@ -13,6 +13,7 @@
 emacs/elpa/
 emacs/auto-save-list/
 emacs/tutorial/
+emacs/eshell/
 
 # kitty
 !kitty/
