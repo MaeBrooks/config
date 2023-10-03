@@ -14,6 +14,8 @@ emacs/elpa/
 emacs/auto-save-list/
 emacs/tutorial/
 emacs/eshell/
+emacs/.lsp-session-v1
+emacs/transient/
 
 # kitty
 !kitty/

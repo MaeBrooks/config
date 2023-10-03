@@ -9,12 +9,19 @@
   (unless (package-installed-p name) (package-install name)))
 
 (defun configure-emacs-globals ()
+  (setq shell-file-name "/bin/zsh")
   (setq auto-save-default nil)
   (setq-default tab-width 2)
-  (setq tab-stop-list)
+  (setq tab-stop-list 1)
   (setq-default indent-tabs-mode t)
   (setq-default tab-width 2))
 (configure-emacs-globals)
+
+;; use path from shell
+(defun setup-path ()
+ 	(install 'exec-path-from-shell)
+	(exec-path-from-shell-initialize))
+(setup-path)
 
 ;; theme
 (defun configure-ui ()
@@ -66,21 +73,44 @@
 (defun configure-lsp ()
   (install 'lsp-mode)
   (require 'lsp-mode)
-  (setq lsp-keymap-prefix "C-c l")
+
+  ;; TODO: figure out how to get this to work??
+	(setq lsp-keymap-prefix "C-.")
+
+	;; company (auto completion)N
+	(install 'company)
+	(add-hook 'after-init-hook 'global-company-mode)
+	
+	;; which-key
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-  (lsp-gopls)
-  )
+
+	;; golang
+	(install 'go-mode)
+  (require 'go-mode)
+	(defun lsp-go-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+  ;; Start LSP Mode and YASnippet mode
+  (add-hook 'go-mode-hook #'lsp-deferred))
 (configure-lsp)
 
-Warning (treesit): Cannot activate tree-sitter, because Emacs is not compiled with tree-sitter library
-
+;; custom functions
+(defun kill-other-buffers ()
+    "Kill all other buffers."
+    (interactive)
+    (mapc 'kill-buffer 
+          (delq (current-buffer) 
+                (remove-if-not 'buffer-file-name (buffer-list)))))
+		
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(which-key evil tree-sitter-langs tree-sitter dracula-theme magit)))
+	 '(exec-path-from-shell which-key evil tree-sitter-langs tree-sitter dracula-theme magit)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

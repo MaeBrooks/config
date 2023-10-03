@@ -29,7 +29,7 @@ bar {
   }
 }
 
-bindsym $mod+d exec "dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -fn 'monospace-10' -p 'dmenu%'"
+bindsym $mod+d exec "$HOME/.config/i3/dmenu_run.zsh"
 
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id feh --bg-scale ~/.config/i3/cottage.jpeg
