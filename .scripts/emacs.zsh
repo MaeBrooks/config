@@ -32,10 +32,10 @@ if [ ! -e $target_dir ] ; then
   tar -xvf $tar_file
   exit_if_failed "Failed to unzip $tar_file"
 
-  mkdir -p $HOME/.apps/
+  sudo mkdir -p $HOME/.apps/
   exit_if_failed "Failed to create $HOME/.apps directory"
 
-  mv $folder $target_dir
+  sudo mv $folder $target_dir
   exit_if_failed "Failed to move emacs to $target_dir"
 fi
 

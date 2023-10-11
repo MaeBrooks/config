@@ -1,5 +1,5 @@
 Scripts=./.scripts
-export HOME=/home/debian
+Run=./.scripts
 
 default: info checks all
 
@@ -18,59 +18,76 @@ info:
 checks:
 	$(Scripts)/check.bash
 
-all: zsh kitty curl \
-	wget feh i3 ripgrep neovim node rust golang lazygit docker docker-compose fly terraform treesitter emacs
+all: zsh \
+	kitty \
+	curl \
+	wget \
+	feh \
+	i3 \
+	ripgrep \
+	neovim \
+	node \
+	rust \
+	golang \
+	lazygit \
+	docker \
+	docker-compose \
+	fly \
+	treesitter \
+	emacs
 
 zsh: $(Scripts)/zsh.zsh
-	$(Scripts)/zsh.zsh
+	$(Run)/zsh.zsh
 
 kitty: $(Scripts)/kitty.zsh
-	$(Scripts)/kitty.zsh
+	$(Run)/kitty.zsh
 
 curl: $(Scripts)/curl.zsh
-	$(Scripts)/curl.zsh
+	$(Run)/curl.zsh
 
 wget: $(Scripts)/wget.zsh
-	$(Scripts)/wget.zsh
+	$(Run)/wget.zsh
 
 feh: $(Scripts)/feh.zsh
-	$(Scripts)/feh.zsh
+	$(Run)/feh.zsh
 
 i3: $(Scripts)/i3.zsh
-	$(Scripts)/i3.zsh
+	$(Run)/i3.zsh
 
 ripgrep: $(Scripts)/ripgrep.zsh
-	$(Scripts)/ripgrep.zsh
+	$(Run)/ripgrep.zsh
 
 neovim: $(Scripts)/neovim.zsh
-	$(Scripts)/neovim.zsh
+	$(Run)/neovim.zsh
 
 node: $(Scripts)/node.zsh
-	$(Scripts)/node.zsh
+	$(Run)/node.zsh
 
 rust: $(Scripts)/rust.zsh
-	$(Scripts)/rust.zsh
+	$(Run)/rust.zsh
 
 golang: $(Scripts)/golang.zsh
-	$(Scripts)/golang.zsh
+	$(Run)/golang.zsh
 
 lazygit: golang $(Scripts)/lazygit.zsh
-	$(Scripts)/lazygit.zsh
+	$(Run)/lazygit.zsh
 
 docker: $(Scripts)/docker.zsh
-	$(Scripts)/docker.zsh
+	$(Run)/docker.zsh
 
 docker-compose: docker $(Scripts)/docker-compose.zsh
-	$(Scripts)/docker-compose.zsh
+	$(Run)/docker-compose.zsh
 
 fly: $(Scripts)/fly.zsh
-	$(Scripts)/fly.zsh
+	$(Run)/fly.zsh
 
 terraform: $(Scripts)/terraform.zsh
-	$(Scripts)/terraform.zsh
+	@echo "This script is broken"
+	exit 1
+	$(Run)/terraform.zsh
 
 treesitter: $(Scripts)/treesitter.zsh
-	$(Scripts)/treesitter.zsh
+	$(Run)/treesitter.zsh
 
 emacs: $(Scripts)/emacs.zsh
-	$(Scripts)/emacs.zsh
+	$(Run)/emacs.zsh

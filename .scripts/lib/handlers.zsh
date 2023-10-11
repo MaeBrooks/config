@@ -30,7 +30,7 @@ function exit_if_exists() {
 
     exit $code
   fi
-v}
+}
 export exit_if_exists
 
 function is_installed() {
