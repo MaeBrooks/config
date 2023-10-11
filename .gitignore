@@ -8,6 +8,9 @@
 #i3
 !i3
 
+#nvim
+!nvim/
+nvim/lazy-lock.json
 
 #emacs
 !emacs/
