@@ -1,10 +1,10 @@
-*
+**/*
 !.zshenv
 !.zshrc
 !.gitignore
 !.config/
-!.config/go/
-!.config/i3/
-!.config/kitty/
-!.config/nvim/
-!.config/obsidian/
+!.config/go/**/*
+!.config/i3/**/*
+!.config/kitty/**/*
+!.config/nvim/**/*
+!.config/obsidian/**/*
