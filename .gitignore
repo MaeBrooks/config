@@ -3,8 +3,14 @@
 !.zshrc
 !.gitignore
 !.config/
-!.config/go/**/*
 !.config/i3/**/*
 !.config/kitty/**/*
 !.config/nvim/**/*
 !.config/obsidian/**/*
+!.emacs.d/**/*
+!.emacs.d/
+.emacs.d/transient/
+.emacs.d/elpa/
+.emacs.d/.saves/
+.emacs.d/auto-save-list
+
