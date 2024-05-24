@@ -9,8 +9,11 @@
 !.config/obsidian/**/*
 !.emacs.d/**/*
 !.emacs.d/
+.emacs.d/tree-sitter/
+.emacs.d/projects
+.emacs.d/eshell/
 .emacs.d/transient/
 .emacs.d/elpa/
 .emacs.d/.saves/
 .emacs.d/auto-save-list
-
+!.quicklisp/slime-helper.e

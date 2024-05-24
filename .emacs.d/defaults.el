@@ -8,6 +8,7 @@
 (show-paren-mode t)
 (setq-default indent-tabs-mode nil)
 (setq tab-stop-list (number-sequence 2 120 2))
+(add-to-list 'exec-path "/home/zoft/.nodenv/shims/")
 
 (add-hook 'dired-mode-hook 'auto-revert-mode)
 (global-display-line-numbers-mode t)
