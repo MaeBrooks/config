@@ -6,6 +6,7 @@
 (load-file "bindings.el")
 (load-file "functions.el")
 (load-file "quicklisp.el")
+(load-file "lsp.el")
 
 ; show tabs with different icon
 ; lsp
@@ -20,7 +21,9 @@
  '(custom-safe-themes
    '("4dcf06273c9f5f0e01cea95e5f71c3b6ee506f192d75ffda639d737964e2e14e"
      default))
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(cmake-mode company eldoc-box exec-path-from-shell
+                gnu-elpa-keyring-update magit vertico)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

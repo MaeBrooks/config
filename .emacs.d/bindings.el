@@ -4,3 +4,34 @@
 (global-set-key (kbd "C-x f") 'find-file)
 
 (global-set-key (kbd "C-M-x b") 'eglot-code-actions)
+
+
+(global-set-key (kbd "C-v") 'utils/scroll-up)
+(global-set-key (kbd "M-v") 'utils/scroll-down)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

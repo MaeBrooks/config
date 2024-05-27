@@ -3,7 +3,7 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 (defun use-package (name &optional callback)
-  (unless (package-installed-p name) (package-install))
+  (unless (package-installed-p name) (package-install name))
   (unless (not callback) (funcall callback))
   )
 
@@ -19,6 +19,8 @@
 (use-package 'eldoc-box (lambda ()
                           (add-hook 'eglot-manage-mode-hook #'eldoc-box-hover-mode t)
                           ))
+
+(use-package 'cmake-mode)
 
 (defun ts-install-grammars()
   (interactive)
