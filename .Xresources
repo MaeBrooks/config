@@ -1,0 +1,36 @@
+! set $dracula-current   #44475a
+! set $dracula-comment   #6272a4
+! set $dracula-bg1       #282a36
+! set $dracula-bg2       #373844
+! set $dracula-bg3       #565761
+! set $dracula-fg1       #f8f8f2
+! set $dracula-fg2       #e2e2dc
+! set $dracula-fg3       #ccccc7
+! set $dracula-fg4       #b6b6b2
+! set $dracula-green     #50fa7b
+! set $dracula-red       #ff5555
+! set $dracula-blue      #0189cc
+! set $dracula-yellow    #f1fa8c
+
+! [ALL] Override for all x default resources
+*background: rgb:28/2a/36
+*foreground: rgb:f8/f8/f2
+
+*faceName: JetBrains Mono
+*faceSize: 14
+
+! [XTERM]
+XTerm.vt100.metaSendsEscape: true
+
+! btn1 = left
+! btn2 = middle?
+! btn3 = right
+XTerm.vt100.translations: #override \n\
+  Alt  <Key>W:       copy-selection(CLIPBOARD) \n\
+  Ctrl <Key>Y:       insert-selection(CLIPBOARD) \n\
+  Ctrl <Key>V:       scroll-forw(5 lines) \n\
+  Alt  <Key>V:       scroll-back(5 lines) \n\
+  Ctrl <Key>+:       larger-vt-font() \n\
+  Ctrl <Key>-:       smaller-vt-font()
+
+

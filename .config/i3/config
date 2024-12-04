@@ -1,0 +1,147 @@
+font pango:JetBrainsMono 10
+workspace_layout tabbed
+default_border pixel 0
+default_floating_border pixel 3
+
+gaps inner 330px
+gaps outer -280px
+
+set $mod Mod4
+floating_modifier $mod
+
+set $dracula-current   #44475a
+set $dracula-comment   #6272a4
+set $dracula-bg1       #282a36
+set $dracula-bg2       #373844
+set $dracula-bg3       #565761
+set $dracula-fg1       #f8f8f2
+set $dracula-fg2       #e2e2dc
+set $dracula-fg3       #ccccc7
+set $dracula-fg4       #b6b6b2
+set $dracula-green     #50fa7b
+set $dracula-red       #ff5555
+set $dracula-blue      #0189cc
+set $dracula-yellow    #f1fa8c
+
+# focused = current
+# focused_inactive = not current
+client.focused          $dracula-bg3    $dracula-bg3   $dracula-fg1
+client.focused_inactive $dracula-bg3    $dracula-bg3   $dracula-yellow
+client.unfocused        $dracula-bg1    $dracula-bg1   $dracula-fg4
+
+client.urgent           $dracula-bg1    $dracula-bg1   $dracula-red
+client.placeholder      $dracula-bg1    $dracula-bg1   $dracula-blue
+client.background       $dracula-bg1
+
+bar
+{
+        position top
+        padding 2px 10px 2px 6px
+        font pango:JetBrainsMono 12
+        
+        separator_symbol ":|:"
+        status_command i3status
+        
+        tray_padding 3
+
+        binding_mode_indicator yes
+        strip_workspace_numbers yes
+        workspace_min_width 25px
+        
+        colors
+        {
+                background $dracula-bg1
+                statusline $dracula-fg1
+                separator  $dracula-comment
+
+                binding_mode       $dracula-bg2 $dracula-bg2 $dracula-yellow
+                active_workspace   $dracula-bg2 $dracula-bg2 $dracula-green
+                urgent_workspace   $dracula-bg2 $dracula-bg2 $dracula-red
+                focused_workspace  $dracula-bg3 $dracula-bg3 $dracula-fg3
+                inactive_workspace $dracula-bg2 $dracula-bg2 $dracula-comment
+        }
+}
+
+bindsym $mod+f            layout toggle tabbed split
+
+# bindsym $mod+Shift+space  floating toggle
+# bindsym $mod+space        focus  mode_toggle
+
+# bindsym $mod+Return       exec emacs
+set $rofi LANG=C rofi
+bindsym $mod+q              kill
+bindsym $mod+Shift+x        exec $rofi -show run
+bindsym $mod+Shift+f        exec $rofi -show filebrowser
+bindsym $mod+Shift+a        exec $rofi -show window
+bindsym $mod+Shift+d        exec flameshot gui
+bindsym $mod+Shift+Return   exec xterm
+
+bindsym $mod+h            focus left
+bindsym $mod+j            focus down
+bindsym $mod+k            focus up
+bindsym $mod+l            focus right
+bindsym $mod+Shift+h      move left
+bindsym $mod+Shift+j      move down
+bindsym $mod+Shift+k      move up
+bindsym $mod+Shift+l      move right
+
+exec --no-startup-id nm-applet
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id feh --bg-max ~/.wallpaper --image-bg '#282a36'
+exec --no-startup-id picom
+exec --no-startup-id i3-msg 'workspace 1:Web; exec firefox'
+exec --no-startup-id i3-msg 'workspace 2:Emacs; exec emacs'
+
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute        exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute     exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+
+set $ws1 "1:Web"
+set $ws2 "2:Emacs"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10:social"
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msgy exit'"
+
+# mode "resize" {
+# bindsym Return mode "default"
+# bindsym Escape mode "default"
+# bindsym $mod+r mode "default"
+# bindsym h resize shrink width 10 px or 10 ppt
+# bindsym j resize grow height 10 px or 10 ppt
+# bindsym k resize shrink height 10 px or 10 ppt
+# bindsym l resize grow width 10 px or 10 ppt
+# }
+# bindsym $mod+r mode "resize"
