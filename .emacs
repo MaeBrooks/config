@@ -5,7 +5,7 @@
 
 (package-initialize :after)
 (setopt package-archives '(("melpa" . "https://melpa.org/packages/")))
-(unless package-archive-contents (package-refresh-contents))
+(if (not package-archive-contents) (package-refresh-contents))
 
 ;; Save Files
 (setq-default indent-tabs-mode nil)
