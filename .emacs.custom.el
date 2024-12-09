@@ -4,12 +4,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(geiser geiser-guile guiser-mit corfu org-roam vertico orderless multiple-cursors magit ido-completing-read+ dracula-theme dashboard amx)))
+   '(markdown-mode geiser geiser-guile guiser-mit corfu org-roam vertico orderless multiple-cursors magit ido-completing-read+ dracula-theme dashboard amx)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(font-lock-bracket-face ((t (:inherit font-lock-punctuation-face :foreground "#ff79c6"))))
  '(org-block-begin-line ((t (:extend t :background "#221e34" :foreground "#aeaab2" :underline "#5d595f" :slant italic :weight bold))))
  '(org-block-end-line ((t (:extend t :background "#221e34" :foreground "#aeaab2" :overline "#5d595f" :slant italic :weight bold))))
  '(org-checkbox ((t (:background "#282a36" :foreground "#efcab2" :box (:line-width (1 . 1) :style flat-button) :weight bold))))
