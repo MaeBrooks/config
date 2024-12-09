@@ -256,5 +256,8 @@
 
   (use-key "C-c a" 'org-agenda))
 
+;; Just until I somehow get gren mode published?
+(load "~/projects/gren-mode/gren-mode.el")
+
 
 (load custom-file)
