@@ -3,7 +3,7 @@
 (setq inhibit-startup-message t)
 (load-theme 'leuven-dark t)
 
-(package-initialize :after)
+(package-initialize :before)
 (setopt package-archives '(("melpa" . "https://melpa.org/packages/")))
 (if (not package-archive-contents) (package-refresh-contents))
 
@@ -54,7 +54,7 @@
   (scroll-bar-mode 0)
   (column-number-mode 1)
   (show-paren-mode 1)
-  (set-frame-font "JetBrains Mono-14" nil t)
+  (set-frame-font "JetBrainsMono Nerd Font-14" nil t)
   (setq whitespace-style '(face tabs tab-mark))
   (global-whitespace-mode 1)
   (when (version<= "26.0.50" emacs-version) (global-display-line-numbers-mode))
@@ -125,70 +125,6 @@
 
   (setq initial-scratch-message nil)
 
-  (let*
-      ;; GUIX stuff
-      ((guix-profile (getenv "GUIX_PROFILE"))
-       (path
-        (concat
-         guix-profile "/bin:"
-         guix-profile "/sbin:"
-         (getenv "PATH")))
-       (icecat-system-dir
-        (concat
-         guix-profile
-         "/lib/icecat"))
-       (guix-locpath
-        (concat
-         guix-profile
-         "/lib/locale:"
-         (getenv "GUIX_LOCPATH")))
-       (library-path
-        (concat
-         guix-profile
-         "/lib:"
-         (getenv "LIBRARY_PATH")))
-       (objcplus-include-path
-        (concat
-         guix-profile
-         "/include:"
-         (getenv "OBJCPLUS_INCLUDE_PATH")))
-       (objc-include-path
-        (concat
-         guix-profile
-         "/include:"
-         (getenv "OBJC_INCLUDE_PATH")))
-       (cplus-include-path
-        (concat
-         guix-profile
-         "/include:"
-         (getenv "CPLUS_INCLUDE_PATH")))
-       (c-include-path
-        (concat
-         guix-profile
-         "/include:"
-         (getenv "C_INCLUDE_PATH")))
-       (info-path
-        (concat
-         guix-profile
-         "/share/info:"
-         (getenv "INFOPATH")))
-       (emacs-load-path
-        (concat
-         guix-profile
-         "/share/emacs/site-lisp:"
-         (getenv "EMACSLOADPATH"))))
-    (progn
-      (setenv "PATH" path)
-      (setenv "ICECAT_SYSTEM_DIR" icecat-system-dir)
-      (setenv "GUIX_LOCPATH" guix-locpath)
-      (setenv "LIBRARY_PATH" library-path)
-      (setenv "OBJCPLUS_INCLUDE_PATH" objcplus-include-path)
-      (setenv "OBJC_INCLUDE_PATH" objc-include-path)
-      (setenv "CPLUS_INCLUDE_PATH" cplus-include-path)
-      (setenv "C_INCLUDE_PATH" c-include-path)
-      (setenv "INFOPATH" info-path)
-      (setenv "EMACSLOADPATH" emacs-load-path)))
-
   (progn
     ;; Tree Sitter
     (setq treesit-language-source-alist '())
@@ -203,6 +139,7 @@
     (use-grammar bash "https://github.com/tree-sitter/tree-sitter-bash")
     (use-grammar markdown "https://github.com/ikatyang/tree-sitter-markdown")
     (use-grammar html "https://github.com/tree-sitter/tree-sitter-html")
+    (use-grammar nix "https://github.com/nix-community/tree-sitter-nix")
     ;; (use-grammar css "https://github.com/tree-sitter/tree-sitter-css")
     ;; (use-grammar typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
     ;; (use-grammar javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
@@ -256,8 +193,11 @@
 
   (use-key "C-c a" 'org-agenda))
 
+(use-package nix-ts-mode :ensure :mode "\\.nix$")
+
+
 ;; Just until I somehow get gren mode published?
-(load "~/projects/gren-mode/gren-mode.el")
+;; (load "~/projects/gren-mode/gren-mode.el")
 
 
 (load custom-file)
