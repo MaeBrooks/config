@@ -12,7 +12,7 @@
 !.emacs
 !.emacs.custom.el
 !.emacs-bongo-cat.gif
-!.wallpaper
+!.wallpaper.png
 !.emacs-icon.png
 !.sunset.svg
 
@@ -24,6 +24,9 @@
 !.config/picom/picom.conf
 !.config/rofi/
 !.config/rofi/config.rasi
+!.config/home-manager
+!.config/home-manager/home.nix
+!flake.nix
 
 !README.md
 

@@ -114,14 +114,32 @@
 
 (use-package emacs :ensure
   :config
-  ;; (global-set-key (kbd "M-x") 'amx)
+
+  (defun -emacs-scroll-down ()
+    "Used to override the default scroll down feature"
+    (interactive)
+    (next-line 10)
+    (recenter))
+  (defun -emacs-scroll-up ()
+    "Used to override the default scroll down feature"
+    (interactive)
+    (previous-line 10)
+    (recenter))
+  
+  (setq grep-command "rg -nS --no-heading " grep-use-null-device nil)
+  
   (use-key "C-x f" 'find-file)
+  (use-key "C-x C-r" 'grep)
   (use-key "C-x C-f" 'find-file)
   (use-key "C-x h" 'dashboard-open)
   (use-key "C-M-d" 'eshell)
   (use-key "C-h d" 'apropos-documentation)
   (use-key "C-h k" 'describe-key)
   (use-key "C-M-i" 'xref-find-definitions)
+  (use-key "C-v" '-emacs-scroll-down)
+  (use-key "M-v" '-emacs-scroll-up)
+
+  (emacs-scroll-up)
 
   (setq initial-scratch-message nil)
 
