@@ -42,10 +42,21 @@
        )))
 
 (defun execute-out (command)
-    "Execute commands out to xterm, does not escape '"
-    (interactive "scommand: ")
-    (shell-command
-       (format "LANG=C xterm -e 'cd %s && %s'" (pwd) command)))
+  "Execute commands out to xterm, does not escape '"
+  (interactive "scommand: ")
+  (shell-command
+   (format "LANG=C xterm -e 'cd %s && %s'" (pwd) command)))
+
+(defun -emacs-scroll-down ()
+  "Used to override the default scroll down feature"
+  (interactive)
+  (next-line 10)
+  (recenter))
+(defun -emacs-scroll-up ()
+  "Used to override the default scroll down feature"
+  (interactive)
+  (previous-line 10)
+  (recenter))
 
 (use-package dracula-theme :ensure
   :init
@@ -63,6 +74,11 @@
   (load-theme 'dracula t)
   (custom-set-faces
    '(org-level-1 ((t (:inherit bold :extend nil :foreground "#ff79c6" :overline "#5d5862" :weight bold :height 1.3))))))
+
+(use-package robe :ensure
+  :config
+  (add-hook 'ruby-mode-hook 'robe-mode)
+  (add-hook 'ruby-ts-mode-hook 'robe-mode))
 
 (use-package dashboard :ensure
   :config
@@ -114,23 +130,12 @@
 
 (use-package emacs :ensure
   :config
-
-  (defun -emacs-scroll-down ()
-    "Used to override the default scroll down feature"
-    (interactive)
-    (next-line 10)
-    (recenter))
-  (defun -emacs-scroll-up ()
-    "Used to override the default scroll down feature"
-    (interactive)
-    (previous-line 10)
-    (recenter))
-  
-  (setq grep-command "rg -nS --no-heading " grep-use-null-device nil)
   
   (use-key "C-x f" 'find-file)
-  (use-key "C-x C-r" 'grep)
-  (use-key "C-x C-f" 'find-file)
+  (use-key "C-x C-f" 'project-find-file)
+  (use-key "C-x r" 'grep)
+  (use-key "C-x C-r" 'project-find-regexp)
+  (use-key "C-M-c" 'mc/mark-next-like-this)
   (use-key "C-x h" 'dashboard-open)
   (use-key "C-M-d" 'eshell)
   (use-key "C-h d" 'apropos-documentation)
@@ -139,15 +144,22 @@
   (use-key "C-v" '-emacs-scroll-down)
   (use-key "M-v" '-emacs-scroll-up)
 
-  (emacs-scroll-up)
-
   (setq initial-scratch-message nil)
+  (setq grep-command "rg -nS --no-heading " grep-use-null-device nil)
+  (set-frame-width (selected-frame) 170)
+  (set-frame-height (selected-frame) 45)
+  (setq split-width-threshold nil)
+  (setq split-height-threshold 100)
+
+  ;; Actually process ansi color sequences
+  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+  (setq compilation-scroll-output 'first-error)
 
   (progn
     ;; Tree Sitter
     (setq treesit-language-source-alist '())
-    (defmacro use-grammar (file-type url)
-      `(add-to-list 'treesit-language-source-alist '(,file-type ,url)))
+    (defmacro use-grammar (file-type url &optional branch folder)
+      `(add-to-list 'treesit-language-source-alist '(,file-type ,url ,branch ,folder)))
     (use-grammar gren "https://github.com/MaeBrooks/tree-sitter-gren")
     (use-grammar c "https://github.com/tree-sitter/tree-sitter-c")
     (use-grammar cpp "https://github.com/tree-sitter/tree-sitter-cpp")
@@ -158,18 +170,17 @@
     (use-grammar markdown "https://github.com/ikatyang/tree-sitter-markdown")
     (use-grammar html "https://github.com/tree-sitter/tree-sitter-html")
     (use-grammar nix "https://github.com/nix-community/tree-sitter-nix")
-    ;; (use-grammar css "https://github.com/tree-sitter/tree-sitter-css")
-    ;; (use-grammar typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-    ;; (use-grammar javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-    ;; (use-grammar json "https://github.com/tree-sitter/tree-sitter-json")
+    (use-grammar css "https://github.com/tree-sitter/tree-sitter-css")
+    (use-grammar typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+    (use-grammar javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+    (use-grammar json "https://github.com/tree-sitter/tree-sitter-json")
+    (use-grammar ruby "https://github.com/tree-sitter/tree-sitter-ruby")
     ;; (use-grammar python "https://github.com/tree-sitter/tree-sitter-python")
     ;; (use-grammar go "https://github.com/tree-sitter/tree-sitter-go")
     ;; (use-grammar toml "https://github.com/tree-sitter/tree-sitter-toml")
     
-    ;; (use-grammar tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+    (use-grammar tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
     ;; (use-grammar yaml "https://github.com/ikatyang/tree-sitter-yaml")
-
-    ;; (add-hook 'c-ts-mode-hook '(lambda () (add-hook 'after-save-hook 'eglot-format-buffer)))
     (add-hook 'c-mode-hook 'c-ts-mode)))
 
 (use-package corfu :ensure
@@ -182,6 +193,7 @@
   :init
   (global-corfu-mode))
 
+(use-package org :ensure)
 (use-package org-roam :ensure
   :init
   (progn
@@ -216,6 +228,24 @@
 
 ;; Just until I somehow get gren mode published?
 ;; (load "~/projects/gren-mode/gren-mode.el")
+(defun npminstall ()
+  (interactive)
+  (compile "npm i --verbose --legacy-peer-deps"))
 
+(defun npmlogin ()
+  (interactive)
+  (compile "npm adduser --registry https://artifactory-prod.ihgint.global/artifactory/api/npm/npm-web-local/"))
+
+(defun npmpublish ()
+  (interactive)
+  (compile "npm publish --registry https://artifactory-prod.ihgint.global/artifactory/api/npm/npm-web-local/"))
+
+(defun org-bookmark-line (line)
+  (interactive "%pInsert Name: ")
+  ;; TODO: Figure out how to get this to store as a bookmark
+  ;; Ideally, this should detect the current project
+  ;; and store the bookmark in an org folder with the name of the project as the folder name
+  ;; spa-stay-mgmt/bookmarks.org
+  )
 
 (load custom-file)
