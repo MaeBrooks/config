@@ -18,7 +18,8 @@
       neofetch
       ripgrep
       unzip
-      direnv
+      nodejs_20
+      typescript-language-server
     ];
 
   home.sessionVariables = {
@@ -32,5 +33,27 @@
     enableBashIntegration = true;
 
     nix-direnv.enable = true;
+  };
+
+  programs.zsh = {
+    enable = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+    envExtra = ''
+      function gc() {
+        git clone --depth 1 $@
+        return $?
+      }
+      function gco() {
+        git checkout $@
+        return $?
+      }
+      function ggl() {
+        git pull $@
+        return $?
+      }
+      eval "$(~/.local/bin/mise activate)"
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    '';
   };
 }
