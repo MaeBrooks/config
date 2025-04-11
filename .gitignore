@@ -16,6 +16,9 @@
 !.emacs-icon.png
 !.sunset.svg
 
+!.packages/
+!.packages/lua
+
 !.config/
 !.config/i3/
 !.config/i3/config

@@ -4,3 +4,6 @@
 [submodule ".emacs.packages/compat"]
 	path = .emacs.packages/compat
 	url = https://github.com/emacs-compat/compat.git
+[submodule ".packages/lua"]
+	path = .packages/lua
+	url = https://github.com/lua/lua
