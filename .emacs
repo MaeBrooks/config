@@ -1,165 +1,83 @@
                                         ; -*- lexical-binding: t -*-
+
+(when (< emacs-major-version 30) (error "Hey, so, this wont work, use emacs version 30 or higher"))
+
+(toggle-frame-maximized)
 (setq custom-file "~/.emacs.custom.el")
-(setq inhibit-startup-message t)
-(load-theme 'leuven-dark t)
 
-(package-initialize :before)
-(setopt package-archives '(("melpa" . "https://melpa.org/packages/")))
-(if (not package-archive-contents) (package-refresh-contents))
+(progn
+  (unless (package-installed-p 'use-package) (package-refresh-contents) (package-install 'use-package))
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-refresh-contents))
 
-;; Save Files
-(setq-default indent-tabs-mode nil)
-(setq create-lockfiles nil)
-(setq backup-directory-alist `(("." . "~/.emacs.d/.saves")))
-
-(setq todos nil)
 (defmacro use-key (key cmd) `(global-set-key (kbd ,key) ,cmd))
 (defmacro neq (lhs rhs) `(not (eq ,lhs ,rhs)))
-(defmacro TODO (todo)
-  `(cond ((eq todos nil)
-          (setq todos '(,todo)))
-         ((eq (cdr todos) nil)
-          (setq todos (append todos ,todo)))
-         ((setq todos (list (car todos) (cdr todos) ,todo)))))
-(defmacro foreach (item items body)
-  `(mapcar
-    (lambda (,item) ,body)
-    ,items))
-(defmacro string-contains-p (sub str)
-  "returns if string contains the substring"
-  `(neq nil (string-match-p ,sub ,str)))
-(defmacro light-cmd ()
-  "The path for the current 'light' command"
-  `(progn
-     (shell-command "whereis light")
-     (with-current-buffer shell-command-buffer-name
-       (let* ((output (substring (buffer-string) 0 -1))
-              (items (cdr (split-string output  " "))))
-         (seq-find
-          (lambda (item)
-            (string-contains-p "/gnu/store/" item))
-          items))
-       )))
+(load-file (getenv "path") "/.emacs.packages.el")
 
-(defun execute-out (command)
-  "Execute commands out to xterm, does not escape '"
-  (interactive "scommand: ")
-  (shell-command
-   (format "LANG=C xterm -e 'cd %s && %s'" (pwd) command)))
+;; Save Files
 
-(defun -emacs-scroll-down ()
-  "Used to override the default scroll down feature"
-  (interactive)
-  (next-line 10)
-  (recenter))
-(defun -emacs-scroll-up ()
-  "Used to override the default scroll down feature"
-  (interactive)
-  (previous-line 10)
-  (recenter))
-
-(use-package dracula-theme :ensure
+(use-package catppuccin-theme :ensure
   :init
-  (tool-bar-mode 0)
-  (menu-bar-mode 0)
-  (scroll-bar-mode 0)
-  (column-number-mode 1)
-  (show-paren-mode 1)
-  (set-frame-font "JetBrainsMono Nerd Font-14" nil t)
-  (setq whitespace-style '(face tabs tab-mark))
-  (global-whitespace-mode 1)
-  (when (version<= "26.0.50" emacs-version) (global-display-line-numbers-mode))
-  :config
-  (setq custom--inhibit-theme-enable nil)
-  (load-theme 'dracula t)
-  (custom-set-faces
-   '(org-level-1 ((t (:inherit bold :extend nil :foreground "#ff79c6" :overline "#5d5862" :weight bold :height 1.3))))))
+  (setq catppuccin-flavor 'mocha)
+  (setq should-use-transparency t)
 
-(use-package robe :ensure
-  :config
-  (add-hook 'ruby-mode-hook 'robe-mode)
-  (add-hook 'ruby-ts-mode-hook 'robe-mode))
-
-(use-package dashboard :ensure
-  :config
-  (setq dashboard-banner-logo-title "Welcome! To Mae's Lair!")
-  (setq dashboard-startup-banner (concat (getenv "HOME") "/.emacs-bongo-cat.gif"))
-  (setq dashboard-footer-messages '("Be Chonker's Strongest Soilder!"))
-  (setq dashboard-footer-icon nil)
-  (setq dashboard-items '((recents . 3) (projects . 5) ( agenda . 5 )))
-  (setq dashboard-center-content t)
-  (setq dashboard-vertically-center-content nil)
-
-  (setq dashboard-startupify-list
-        '(dashboard-insert-banner
-          dashboard-insert-newline
-          dashboard-insert-banner-title
-          dashboard-insert-newline
-          dashboard-insert-footer
-          dashboard-insert-items
-          dashboard-insert-newline
-          dashboard-insert-init-info))
-  (dashboard-setup-startup-hook))
-
-(use-package geiser :ensure)
-(use-package geiser-guile :ensure :mode "\\.scm$")
-
-(use-package magit :ensure)
-
-(use-package vertico :ensure
-  :config
-  (setopt
-   vertico-mode t
-   vertico-mouse-mode t
-   vertico-cycle t))
-
-(use-package orderless :ensure
-  :config
-  (setopt
-   completion-styles '(orderless basic)
-   completion-category-overrides '((file (styles partial-completion)))))
-
-(use-package multiple-cursors :ensure
-  :config
-  (define-key mc/keymap (kbd "<return>") nil)
-  (use-key "C-M-c" 'mc/mark-next-like-this))
-
-(use-package eglot :ensure
-  :config
-  (use-key "C-x C-q" 'eglot-format-buffer))
+  (load-theme 'catppuccin :no-confirm)
+  (toggle-frame-maximized)
+  (if should-use-transparency (set-frame-parameter nil 'alpha '(80 80))))
 
 (use-package emacs :ensure
   :config
-  
+  (set-frame-font "JetBrainsMono Nerd Font-14" nil t)
+
+  (defun emacs/emacs-scroll-down () (interactive) (next-line 6))
+  (defun emacs/emacs-scroll-up () (interactive) (previous-line 6))
+  (defun emacs/snippet () (interactive))
+  (defun emacs/kill-all-buffers () (interactive)
+    (mapcar 'kill-buffer (buffer-list)))
+
+  (setq emacs/setting-macro-status nil)
+  (defun emacs/macro-start-end ()
+    (interactive)
+    (if (not emacs/setting-macro-status)
+      (progn
+        (setq emacs/setting-macro-status t)
+        (call-interactively 'kmacro-start-macro))
+      (progn
+        (setq emacs/setting-macro-status nil)
+        (call-interactively 'kmacro-end-macro))))
+  (defun docket ()
+    "Jump to our default org file"
+    (interactive)
+    (find-file (format "%s%s" (getenv "HOME") "/.notes/.agenda/default.org")))
+  (defun today ()
+    "Jump to our default org file"
+    (interactive)
+    (find-file (format "%s%s" (getenv "HOME") "/.notes/.agenda/today.org")))
+  (defun config ()
+    "Jump to this file!"
+    (interactive)
+    (find-file (format "%s%s" (getenv "HOME") "/.emacs")))
+
   (use-key "C-x f" 'find-file)
   (use-key "C-x C-f" 'project-find-file)
   (use-key "C-x r" 'grep)
   (use-key "C-x C-r" 'project-find-regexp)
   (use-key "C-M-c" 'mc/mark-next-like-this)
-  (use-key "C-x h" 'dashboard-open)
-  (use-key "C-M-d" 'eshell)
-  (use-key "C-h d" 'apropos-documentation)
-  (use-key "C-h k" 'describe-key)
   (use-key "C-M-i" 'xref-find-definitions)
-  (use-key "C-v" '-emacs-scroll-down)
-  (use-key "M-v" '-emacs-scroll-up)
-
-  (setq initial-scratch-message nil)
-  (setq grep-command "rg -nS --no-heading " grep-use-null-device nil)
-  (set-frame-width (selected-frame) 170)
-  (set-frame-height (selected-frame) 45)
-  (setq split-width-threshold nil)
-  (setq split-height-threshold 100)
-
-  ;; Actually process ansi color sequences
+  (use-key "C-v" 'emacs/emacs-scroll-down)
+  (use-key "M-v" 'emacs/emacs-scroll-up)
+  (use-key "s-n" 'eldoc-doc-buffer)
+  (use-key "M-z" 'emacs/snippet)
+  (use-key "C-x C-b" 'emacs/kill-all-buffers)
+  (use-key "M-q" 'emacs/macro-start-end)
+  (use-key "M-@" 'kmacro-call-macro)
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-  (setq compilation-scroll-output 'first-error)
 
   (progn
-    ;; Tree Sitter
     (setq treesit-language-source-alist '())
-    (defmacro use-grammar (file-type url &optional branch folder)
-      `(add-to-list 'treesit-language-source-alist '(,file-type ,url ,branch ,folder)))
+    (defmacro use-grammar (file-type url &optional branch folder) `(add-to-list 'treesit-language-source-alist '(,file-type ,url ,branch ,folder)))
     (use-grammar gren "https://github.com/MaeBrooks/tree-sitter-gren")
     (use-grammar c "https://github.com/tree-sitter/tree-sitter-c")
     (use-grammar cpp "https://github.com/tree-sitter/tree-sitter-cpp")
@@ -175,77 +93,87 @@
     (use-grammar javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
     (use-grammar json "https://github.com/tree-sitter/tree-sitter-json")
     (use-grammar ruby "https://github.com/tree-sitter/tree-sitter-ruby")
-    ;; (use-grammar python "https://github.com/tree-sitter/tree-sitter-python")
-    ;; (use-grammar go "https://github.com/tree-sitter/tree-sitter-go")
-    ;; (use-grammar toml "https://github.com/tree-sitter/tree-sitter-toml")
-    
+    (use-grammar go "https://github.com/tree-sitter/tree-sitter-go")
+    (use-grammar python "https://github.com/tree-sitter/tree-sitter-python")
+    (use-grammar toml "https://github.com/tree-sitter/tree-sitter-toml")
     (use-grammar tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-    ;; (use-grammar yaml "https://github.com/ikatyang/tree-sitter-yaml")
+    (use-grammar yaml "https://github.com/ikatyang/tree-sitter-yaml")
+    (use-grammar gd "https://github.com/PrestonKnopp/tree-sitter-gdscript.git")
     (add-hook 'c-mode-hook 'c-ts-mode)))
 
-(use-package corfu :ensure
-  :custom
-  ;; auto complete
-  (corfu-auto t)
-  (corfu-auto-delay 0.1)
-  ;; "allows cycling through canidates"
-  (corfu-cycle t)
+(use-package magit :ensure
+  :config
+  (defun magit-show ()
+    "Show the file changes by commit"
+    (interactive)
+    (magit-log-buffer-file))
+
+  (defun magit-copy-branch-name ()
+    "copy the current branch name to the system clipboard"
+    (interactive)
+    (if (magit-get-current-branch)
+      (progn
+        (kill-new (magit-get-current-branch))
+        (message "%s" (magit-get-current-branch)))
+      (user-error "No Current branch!!"))))
+
+(use-package vertico :ensure :config
+  (setopt
+   vertico-mode t
+   vertico-mouse-mode t
+   vertico-cycle t))
+
+(use-package orderless :ensure :config
+  (setopt
+   completion-styles '(orderless basic)
+   completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package multiple-cursors :ensure :config
+  (define-key mc/keymap (kbd "<return>") nil)
+  (use-key "C-M-c" 'mc/mark-next-like-this))
+
+(use-package eglot :ensure :config
+  (use-key "M-n" 'eglot-code-actions)
+  (use-key "C-x C-q" 'eglot-format-buffer))
+
+(use-package go-mode :ensure)
+(use-package nix-ts-mode :ensure :mode "\\.nix$")
+(use-package gren-mode :ensure nil :load-path "~/projects/gren-mode/" :mode "\\.gren$")
+(use-package lua-mode :ensure :mode "\\.lua$")
+(use-package typescript-ts-mode :ensure :mode "\\.ts[x]*$")
+(use-package gdscript-mode :ensure :mode "\\.gd$"
+  :hook (gdscript-mode . eglot-ensure)
+  :custom (gdscript-eglot-version 3))
+
+(use-package corfu :ensure :config
+  (setopt
+   corfu-auto t
+   corfu-auto-delay 0.1
+   corfy-cycle t)
   :init
   (global-corfu-mode))
 
-(use-package org :ensure)
-(use-package org-roam :ensure
-  :init
-  (progn
-    ;; (org-roam-db-autosync-mode)
+(use-package org :ensure
+  :config
+  (use-package org-roam :ensure
+    :init
     (defmacro mkdir-a (directory)
       `(unless (file-directory-p ,directory)
          (make-directory ,directory)))
-    
     (setq org-directory        (format "%s/.notes" (getenv "HOME")))
     (setq org-roam-directory   (format "%s/.roam" org-directory))
     (setq org-agenda-directory (format "%s/.agenda" org-directory))
     (mkdir-a org-directory)
     (mkdir-a org-roam-directory)
     (mkdir-a org-agenda-directory)
+    (setq org-agenda-files (list org-agenda-directory))
 
-    (setq org-agenda-files (list org-agenda-directory)))
-  :config
-  ;; Org Mode
-  (setq org-hide-emphasis-markers t)
-  (setq org-hide-leading-stars t)
-  (setq org-list-allow-alphabetical t)
-  (org-roam-db-autosync-mode)
-
-  (progn
-    ;; todo items
-    (setq org-log-done t))
-
-  (use-key "C-c a" 'org-agenda))
-
-(use-package nix-ts-mode :ensure :mode "\\.nix$")
-
-
-;; Just until I somehow get gren mode published?
-;; (load "~/projects/gren-mode/gren-mode.el")
-(defun npminstall ()
-  (interactive)
-  (compile "npm i --verbose --legacy-peer-deps"))
-
-(defun npmlogin ()
-  (interactive)
-  (compile "npm adduser --registry https://artifactory-prod.ihgint.global/artifactory/api/npm/npm-web-local/"))
-
-(defun npmpublish ()
-  (interactive)
-  (compile "npm publish --registry https://artifactory-prod.ihgint.global/artifactory/api/npm/npm-web-local/"))
-
-(defun org-bookmark-line (line)
-  (interactive "%pInsert Name: ")
-  ;; TODO: Figure out how to get this to store as a bookmark
-  ;; Ideally, this should detect the current project
-  ;; and store the bookmark in an org folder with the name of the project as the folder name
-  ;; spa-stay-mgmt/bookmarks.org
-  )
+    :config
+    (org-roam-db-autosync-mode)
+    (setopt
+      org-hide-emphasis-markers t
+      org-hide-leading-stars t
+      org-list-allow-alphabetical t)
+    (use-key "C-c a" 'org-agenda)))
 
 (load custom-file)
