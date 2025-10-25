@@ -1,112 +1,73 @@
                                         ; -*- lexical-binding: t -*-
 
-(when (< emacs-major-version 30) (error "Hey, so, this wont work, use emacs version 30 or higher"))
+(when (< emacs-major-version 30)
+  (error "Hey, so, this wont work, use emacs version 30 or higher"))
 
-(toggle-frame-maximized)
 (setq custom-file "~/.emacs.custom.el")
 
-(progn
-  (unless (package-installed-p 'use-package) (package-refresh-contents) (package-install 'use-package))
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-refresh-contents))
+;; use-package comes with emacs, but you can choose to build without it
+;; We require it anyways
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-(defmacro use-key (key cmd) `(global-set-key (kbd ,key) ,cmd))
-(defmacro neq (lhs rhs) `(not (eq ,lhs ,rhs)))
-(load-file (getenv "path") "/.emacs.packages.el")
+;; Macos window ui - transparent, dark mode, and no title bar.
+(when (memq window-system '(mac ns))
+	(set-frame-parameter nil 'alpha '(85 85))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark))
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
-;; Save Files
+;; https://draculatheme.com/
+(use-package dracula-theme :ensure t :config
+  (load-theme 'dracula :no-confirm)
+  (if (x-list-fonts "Hack")
+    (set-frame-font "Hack-14" nil)))
 
-(use-package catppuccin-theme :ensure
-  :init
-  (setq catppuccin-flavor 'mocha)
-  (setq should-use-transparency t)
+;; Technically this does "nothing" but make the code a bit cleaner
+(use-package emacs :ensure t :config
+  ;; Makes the move a few lines up and down bindings less jarring IMO
+  (global-set-key (kbd "M-v") (lambda () (interactive) (previous-line 6)))
+  (global-set-key (kbd "C-v") (lambda () (interactive) (next-line 6)))
 
-  (load-theme 'catppuccin :no-confirm)
-  (toggle-frame-maximized)
-  (if should-use-transparency (set-frame-parameter nil 'alpha '(80 80))))
+  ;; Replace fill-column with dired
+  (global-set-key (kbd "C-x f") 'find-file)
 
-(use-package emacs :ensure
-  :config
-  (set-frame-font "JetBrainsMono Nerd Font-14" nil t)
+  ;; The M-x compile ignores ansi color filters by default, lets not do that
+  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
-  (defun emacs/emacs-scroll-down () (interactive) (next-line 6))
-  (defun emacs/emacs-scroll-up () (interactive) (previous-line 6))
-  (defun emacs/snippet () (interactive))
-  (defun emacs/kill-all-buffers () (interactive)
-    (mapcar 'kill-buffer (buffer-list)))
+  ;; If you have a ~/.emacs.local.el
+  ;; include it! I dont commit this file, usually it will contain private work stuff
+  (if (file-exists-p "~/.emacs.local.el")
+      (load-file "~/.emacs.local.el"))
 
-  (setq emacs/setting-macro-status nil)
-  (defun emacs/macro-start-end ()
-    (interactive)
-    (if (not emacs/setting-macro-status)
-      (progn
-        (setq emacs/setting-macro-status t)
-        (call-interactively 'kmacro-start-macro))
-      (progn
-        (setq emacs/setting-macro-status nil)
-        (call-interactively 'kmacro-end-macro))))
-  (defun docket ()
-    "Jump to our default org file"
-    (interactive)
-    (find-file (format "%s%s" (getenv "HOME") "/.notes/.agenda/default.org")))
-  (defun today ()
-    "Jump to our default org file"
-    (interactive)
-    (find-file (format "%s%s" (getenv "HOME") "/.notes/.agenda/today.org")))
+  ;; Open up this file!
   (defun config ()
-    "Jump to this file!"
     (interactive)
     (find-file (format "%s%s" (getenv "HOME") "/.emacs")))
 
-  (use-key "C-x f" 'find-file)
-  (use-key "C-x C-f" 'project-find-file)
-  (use-key "C-x r" 'grep)
-  (use-key "C-x C-r" 'project-find-regexp)
-  (use-key "C-M-c" 'mc/mark-next-like-this)
-  (use-key "C-M-i" 'xref-find-definitions)
-  (use-key "C-v" 'emacs/emacs-scroll-down)
-  (use-key "M-v" 'emacs/emacs-scroll-up)
-  (use-key "s-n" 'eldoc-doc-buffer)
-  (use-key "M-z" 'emacs/snippet)
-  (use-key "C-x C-b" 'emacs/kill-all-buffers)
-  (use-key "M-q" 'emacs/macro-start-end)
-  (use-key "M-@" 'kmacro-call-macro)
-  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-
-  (progn
-    (setq treesit-language-source-alist '())
-    (defmacro use-grammar (file-type url &optional branch folder) `(add-to-list 'treesit-language-source-alist '(,file-type ,url ,branch ,folder)))
-    (use-grammar gren "https://github.com/MaeBrooks/tree-sitter-gren")
-    (use-grammar c "https://github.com/tree-sitter/tree-sitter-c")
-    (use-grammar cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-    (use-grammar cmake "https://github.com/uyha/tree-sitter-cmake")
-    (use-grammar elisp "https://github.com/Wilfred/tree-sitter-elisp")
-    (use-grammar make "https://github.com/alemuller/tree-sitter-make")
-    (use-grammar bash "https://github.com/tree-sitter/tree-sitter-bash")
-    (use-grammar markdown "https://github.com/ikatyang/tree-sitter-markdown")
-    (use-grammar html "https://github.com/tree-sitter/tree-sitter-html")
-    (use-grammar nix "https://github.com/nix-community/tree-sitter-nix")
-    (use-grammar css "https://github.com/tree-sitter/tree-sitter-css")
-    (use-grammar typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-    (use-grammar javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-    (use-grammar json "https://github.com/tree-sitter/tree-sitter-json")
-    (use-grammar ruby "https://github.com/tree-sitter/tree-sitter-ruby")
-    (use-grammar go "https://github.com/tree-sitter/tree-sitter-go")
-    (use-grammar python "https://github.com/tree-sitter/tree-sitter-python")
-    (use-grammar toml "https://github.com/tree-sitter/tree-sitter-toml")
-    (use-grammar tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-    (use-grammar yaml "https://github.com/ikatyang/tree-sitter-yaml")
-    (use-grammar gd "https://github.com/PrestonKnopp/tree-sitter-gdscript.git")
-    (add-hook 'c-mode-hook 'c-ts-mode)))
-
-(use-package magit :ensure
-  :config
-  (defun magit-show ()
-    "Show the file changes by commit"
+  ;; Often I need to get the full path of a file
+  ;; Now you can do so with M-x pwd
+  (defun pwd ()
     (interactive)
-    (magit-log-buffer-file))
+    (kill-new (buffer-file-name))
+    (message (buffer-file-name))))
+
+;; Project is a built in emacs package that contains project level commands
+;; Check it out with:
+;;   C-x p p - switch to project
+;;   C-x p c - run M-x compile at the project root
+(use-package project :ensure t :config
+  ;; Replace find-file with project file search
+  (global-set-key (kbd "C-x C-f") 'project-find-file)
+
+  ;; Replace find-file (readonly) with project grep (which is set to us ripgrep (rg) as the default grep command
+  ;; This is set using M-x customize-variable xref-search-program 'ripgrep
+  (global-set-key (kbd "C-x C-r") 'project-find-regexp))
+
+;; Magit - The only git thing you want, need, or will ever be happy with again :3
+(use-package magit :ensure t
+  :config
+  (defalias 'magit-show 'magit-log-buffer-file)
 
   (defun magit-copy-branch-name ()
     "copy the current branch name to the system clipboard"
@@ -115,65 +76,125 @@
       (progn
         (kill-new (magit-get-current-branch))
         (message "%s" (magit-get-current-branch)))
-      (user-error "No Current branch!!"))))
+      (user-error "No Current branch!!")))
 
-(use-package vertico :ensure :config
+  (use-package git-gutter :ensure t
+    :config
+    (global-git-gutter-mode +1)))
+
+(use-package multiple-cursors :ensure t :config
+  (define-key mc/keymap (kbd "<return>") nil)
+  ;; Mark next line
+  (global-set-key (kbd "C-M-c") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-M-d") 'mc/mark-all-in-region))
+
+;; Vertical completion - see completion options
+(use-package vertico :ensure t :config
   (setopt
    vertico-mode t
    vertico-mouse-mode t
    vertico-cycle t))
 
-(use-package orderless :ensure :config
+;; Better completion order for multiple packages
+(use-package orderless :ensure t :config
   (setopt
    completion-styles '(orderless basic)
    completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package multiple-cursors :ensure :config
-  (define-key mc/keymap (kbd "<return>") nil)
-  (use-key "C-M-c" 'mc/mark-next-like-this))
-
-(use-package eglot :ensure :config
-  (use-key "M-n" 'eglot-code-actions)
-  (use-key "C-x C-q" 'eglot-format-buffer))
-
-(use-package go-mode :ensure)
-(use-package nix-ts-mode :ensure :mode "\\.nix$")
-(use-package gren-mode :ensure nil :load-path "~/projects/gren-mode/" :mode "\\.gren$")
-(use-package lua-mode :ensure :mode "\\.lua$")
-(use-package typescript-ts-mode :ensure :mode "\\.ts[x]*$")
-(use-package gdscript-mode :ensure :mode "\\.gd$"
-  :hook (gdscript-mode . eglot-ensure)
-  :custom (gdscript-eglot-version 3))
-
-(use-package corfu :ensure :config
+  ;; Auto completion while typing
+(use-package corfu :ensure t :init (global-corfu-mode) :config
   (setopt
    corfu-auto t
    corfu-auto-delay 0.1
-   corfy-cycle t)
-  :init
-  (global-corfu-mode))
+   corfu-cycle t)
 
-(use-package org :ensure
-  :config
-  (use-package org-roam :ensure
-    :init
-    (defmacro mkdir-a (directory)
-      `(unless (file-directory-p ,directory)
-         (make-directory ,directory)))
-    (setq org-directory        (format "%s/.notes" (getenv "HOME")))
-    (setq org-roam-directory   (format "%s/.roam" org-directory))
-    (setq org-agenda-directory (format "%s/.agenda" org-directory))
-    (mkdir-a org-directory)
-    (mkdir-a org-roam-directory)
-    (mkdir-a org-agenda-directory)
-    (setq org-agenda-files (list org-agenda-directory))
+  ;; Icons for completion
+  (use-package svg-lib :ensure t :config)
+  (use-package kind-icon :ensure t :after corfu :config
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
+;; Snippets!
+(use-package yasnippet :ensure t :config
+  (setq yas-snippet-dirs `(,(format "%s/%s" (getenv "HOME") ".emacs.snippets")))
+  (yas-global-mode t))
+
+
+(use-package eglot :ensure t :config
+  ;; Show code actions, like add import!
+  (global-set-key (kbd "M-n") 'eglot-code-actions)
+  ;; Format the current buffer
+  (global-set-key (kbd "C-x C-q") 'eglot-format-buffer)
+  ;; Goto definition
+  (global-set-key (kbd "C-M-i") 'xref-find-definitions)
+  ;; Show the definition of the current item at cursor
+  (global-set-key (kbd "s-n") 'eldoc-doc-buffer)
+
+  (use-package go-mode :ensure t)
+
+  (use-package lua-mode :ensure t :mode "\\.lua$")
+
+  (use-package typescript-ts-mode :ensure t :mode "\\.ts[x]*$")
+
+  (use-package gdscript-mode :ensure t :mode "\\.gd$"
+    :hook (gdscript-mode . eglot-ensure)
+    :custom (gdscript-eglot-version 3))
+
+  (use-package zig-mode :ensure t
     :config
-    (org-roam-db-autosync-mode)
-    (setopt
-      org-hide-emphasis-markers t
-      org-hide-leading-stars t
-      org-list-allow-alphabetical t)
-    (use-key "C-c a" 'org-agenda)))
+    (setenv "PATH" (format "%s:%s"
+			   (format "%s/opt/zig-15" (getenv "HOME"))
+			   (getenv "PATH")))
+    (setenv "PATH" (format "%s:%s"
+			   (format "%s/opt/zls" (getenv "HOME"))
+			   (getenv "PATH")))))
+
+;; Org-mode! Note taking is awesome
+(use-package org :ensure t)
+
+;; Tree sitter setup
+
+
+(use-package treesit-fold :ensure t :if (treesit-available-p) :config
+  ;; Add tree sitter grammar locations! so that emacs can prompt and install them
+  (setq treesit-language-source-alist '())
+  (defun add-ts-grammar (mode-name url &optional branch folder)
+    (add-to-list 'treesit-language-source-alist (list mode-name url branch folder)))
+
+  ;; C language
+  (add-ts-grammar 'c "https://github.com/tree-sitter/tree-sitter-c")
+  (add-hook 'c-mode-hook 'c-ts-mode)
+
+  ;; Gd script
+  (add-ts-grammar 'gd "https://github.com/PrestonKnopp/tree-sitter-gdscript.git")
+
+  ;; Web
+  (add-ts-grammar 'css "https://github.com/tree-sitter/tree-sitter-css")
+  (add-ts-grammar 'html "https://github.com/tree-sitter/tree-sitter-html")
+  (add-ts-grammar 'typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+  (add-ts-grammar 'javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+  ;; (add-ts-grammar tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+
+  ;; General
+  (add-ts-grammar 'elisp "https://github.com/Wilfred/tree-sitter-elisp")
+  (add-ts-grammar 'bash "https://github.com/tree-sitter/tree-sitter-bash")
+  (add-ts-grammar 'markdown "https://github.com/ikatyang/tree-sitter-markdown")
+  (add-ts-grammar 'json "https://github.com/tree-sitter/tree-sitter-json")
+
+  ;; (add-ts-grammar cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+  ;; (add-ts-grammar 'cmake "https://github.com/uyha/tree-sitter-cmake")
+  ;; (add-ts-grammar 'make "https://github.com/alemuller/tree-sitter-make")
+  (add-ts-grammar 'go "https://github.com/tree-sitter/tree-sitter-go")
+  (add-ts-grammar 'ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+  (add-ts-grammar 'python "https://github.com/tree-sitter/tree-sitter-python")
+  (add-ts-grammar 'toml "https://github.com/tree-sitter/tree-sitter-toml")    
+  (add-ts-grammar 'yaml "https://github.com/ikatyang/tree-sitter-yaml"))
+
+(defun init-package ()
+  "Install missing packages & 'import' package so that you can do M-x package-install"
+  (interactive)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-refresh-contents))
 
 (load custom-file)
