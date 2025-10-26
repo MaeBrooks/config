@@ -26,7 +26,16 @@
  '(lua-ts-indent-continuation-lines nil)
  '(lua-ts-indent-offset 2)
  '(menu-bar-mode nil)
- '(package-selected-packages nil)
+ '(package-selected-packages
+		'(corfu dracula-theme gdscript-mode git-gutter go-mode kind-icon
+			 lua-mode magit multiple-cursors orderless treesit-fold vertico
+			 yasnippet zig-mode))
+ '(package-vc-selected-packages
+		'((git-gutter :url "https://github.com/emacsorphanage/git-gutter"
+				:branch "master")
+			 (gdscript-mode :url
+				 "https://github.com/godotengine/emacs-gdscript-mode" :branch
+				 "master")))
  '(scroll-bar-mode nil)
  '(split-height-threshold nil)
  '(split-width-threshold nil)
