@@ -13,7 +13,7 @@
 
 ;; Macos window ui - transparent, dark mode, and no title bar.
 (when (memq window-system '(mac ns))
-	(set-frame-parameter nil 'alpha '(75 75))
+	(set-frame-parameter nil 'alpha '(80 80))
 	(add-to-list 'default-frame-alist '(ns-appearance . dark))
 	(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
@@ -21,7 +21,7 @@
 (use-package dracula-theme :ensure t :config
 	(load-theme 'dracula :no-confirm)
 	(if (x-list-fonts "Hack")
-		(set-frame-font "Hack-14" nil)))
+		(set-frame-font "Hack-18" nil)))
 
 ;; Technically this does "nothing" but make the code a bit cleaner
 (use-package emacs :ensure t :config
@@ -195,8 +195,14 @@
 	(add-ts-grammar 'go "https://github.com/tree-sitter/tree-sitter-go")
 	(add-ts-grammar 'ruby "https://github.com/tree-sitter/tree-sitter-ruby")
 	(add-ts-grammar 'python "https://github.com/tree-sitter/tree-sitter-python")
-	(add-ts-grammar 'toml "https://github.com/tree-sitter/tree-sitter-toml")		
+	(add-ts-grammar 'toml "https://github.com/tree-sitter/tree-sitter-toml")
 	(add-ts-grammar 'yaml "https://github.com/ikatyang/tree-sitter-yaml"))
+
+;; Eww is the built in browser for emacs
+;; It doesnt eval javascript, but its really really nice for documentation
+;; purposes
+(use-package eww :ensure t :config
+	(global-set-key (kbd "M-s b") 'eww-list-bookmarks))
 
 (defun init-package ()
 	"Install missing packages & 'import' package so that you can do M-x package-install"
