@@ -163,20 +163,28 @@
 		:custom (gdscript-eglot-version 3))
 
 	(use-package zig-mode :ensure t
+		:hook (zig-mode . eglot-ensure)
 		:config
 		(setenv "PATH" (format "%s:%s"
 				 (format "%s/opt/zig-15" (getenv "HOME"))
 				 (getenv "PATH")))
 		(setenv "PATH" (format "%s:%s"
 				 (format "%s/opt/zls" (getenv "HOME"))
-				 (getenv "PATH")))))
+										 (getenv "PATH")))
+		(use-package zig-ts-mode
+			:vc (:url "https://codeberg.org/meow_king/zig-ts-mode" :branch main :rev :newest)
+			:ensure t
+			:mode "\\.zig$"
+			:hook (zig-mode . zig-ts-mode)))
+
+	(use-package odin-ts-mode :ensure t
+		:vc (:url "https://github.com/Sampie159/odin-ts-mode" :branch main :rev :newest)
+		:mode "\\.odin\\'"))
 
 ;; Org-mode! Note taking is awesome
 (use-package org :ensure t)
 
 ;; Tree sitter setup
-
-
 (use-package treesit-fold :ensure t :if (treesit-available-p) :config
 	;; Add tree sitter grammar locations! so that emacs can prompt and install them
 	(setq treesit-language-source-alist '())
@@ -185,10 +193,13 @@
 
 	;; C language
 	(add-ts-grammar 'c "https://github.com/tree-sitter/tree-sitter-c")
-	(add-hook 'c-mode-hook 'c-ts-mode)
+	(add-hook 'c-mode-hook 'c-++-ts-mode)
+	;;
+	(add-ts-grammar 'odin "https://github.com/tree-sitter-grammars/tree-sitter-odin")
 
 	;; Gd script
 	(add-ts-grammar 'gd "https://github.com/PrestonKnopp/tree-sitter-gdscript.git")
+	(add-ts-grammar 'zig "https://github.com/maxxnino/tree-sitter-zig")
 
 	;; Web
 	(add-ts-grammar 'css "https://github.com/tree-sitter/tree-sitter-css")
