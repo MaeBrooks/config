@@ -13,24 +13,30 @@
 
 ;; Macos window ui - transparent, dark mode, and no title bar.
 (when (memq window-system '(mac ns))
-	(set-frame-parameter nil 'alpha '(80 80))
+	(let ((alpha 80))
+		(set-frame-parameter nil 'alpha (list alpha alpha)))
 	(add-to-list 'default-frame-alist '(ns-appearance . dark))
 	(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
-;; https://draculatheme.com/
-(use-package dracula-theme :ensure t :config
-	(load-theme 'dracula :no-confirm)
+(use-package catppuccin-theme
+	:vc (:url "https://github.com/catppuccin/emacs" :branch main :rev :newest)
+	(load-theme 'catppuccin :no-confirm)
+
 	(if (x-list-fonts "Hack")
 		(set-frame-font "Hack-18" nil)))
 
 ;; Technically this does "nothing" but make the code a bit cleaner
 (use-package emacs :ensure t :config
+	;; Type y or n instead of yes or no
+	(defalias 'yes-or-no-p 'y-or-n-p)
+
 	;; Makes the move a few lines up and down bindings less jarring IMO
 	(global-set-key (kbd "M-v") (lambda () (interactive) (previous-line 6)))
 	(global-set-key (kbd "C-v") (lambda () (interactive) (next-line 6)))
 
 	;; Replace fill-column with dired
 	(global-set-key (kbd "C-x f") 'find-file)
+	(setq dired-dwim-target t)
 
 	;; The M-x compile ignores ansi color filters by default, lets not do that
 	(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
@@ -44,6 +50,13 @@
 	(defun config ()
 		(interactive)
 		(find-file (format "%s%s" (getenv "HOME") "/.emacs")))
+	;; Open up the stream!
+	(defun stream ()
+		(interactive)
+		(find-file (format "%s%s" (getenv "HOME") "/.notes/stream.org")))
+	(defun docket ()
+		(interactive)
+		(find-file (format "%s%s" (getenv "HOME") "/.notes/docket.org")))
 
 	;; Often I need to get the full path of a file
 	;; Now you can do so with M-x pwd
@@ -103,9 +116,10 @@
 
 ;; Better completion order for multiple packages
 (use-package orderless :ensure t :config
-	(setopt
-	 completion-styles '(orderless basic)
-	 completion-category-overrides '((file (styles partial-completion)))))
+	:custom
+	(completion-styles '(orderless basic))
+	(completion-pcm-leading-wildcard t)
+	(completion-category-overrides '((file (styles partial-completion)))))
 
 	;; Auto completion while typing
 (use-package corfu :ensure t :init (global-corfu-mode) :config
@@ -211,5 +225,7 @@
 	(package-initialize)
 	(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 	(package-refresh-contents))
+
+(load "~/.emacs.utils.el")
 
 (load custom-file)

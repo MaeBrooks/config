@@ -11,6 +11,7 @@
 !.guix-packages
 !.emacs
 !.emacs.custom.el
+!.emacs.utils.el
 !.emacs-bongo-cat.gif
 !.wallpaper.png
 !.emacs-icon.png
