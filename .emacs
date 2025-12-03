@@ -18,9 +18,15 @@
 	(add-to-list 'default-frame-alist '(ns-appearance . dark))
 	(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
+(use-package exec-path-from-shell :ensure t :config
+	(exec-path-from-shell-initialize))
+
 (use-package catppuccin-theme
 	:vc (:url "https://github.com/catppuccin/emacs" :branch main :rev :newest)
+	:ensure t
+	:config
 	(load-theme 'catppuccin :no-confirm)
+	(catppuccin-load-flavor 'mocha)
 
 	(if (x-list-fonts "Hack")
 		(set-frame-font "Hack-18" nil)))
