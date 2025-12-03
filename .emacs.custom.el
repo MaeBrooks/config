@@ -32,7 +32,7 @@
  '(lua-ts-indent-continuation-lines nil)
  '(lua-ts-indent-offset 2)
  '(menu-bar-mode nil)
- '(package-selected-packages '(catppuccin-theme emms))
+ '(package-selected-packages '(catppuccin-theme emms exec-path-from-shell))
  '(package-vc-selected-packages
 		'((catppuccin-theme :url "https://github.com/catppuccin/emacs" :branch
 				"main")
