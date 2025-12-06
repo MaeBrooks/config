@@ -11,9 +11,9 @@
  '(create-lockfiles nil)
  '(css-indent-offset 2)
  '(custom-safe-themes
-		'("4f79800557fec5f3db08b1643e43931eb0bbbed99db4862ec5611a3e5b46171c"
-			 "9c6aa7eb1bde73ba1142041e628827492bd05678df4d9097cda21b1ebcb8f8b9"
-			 default))
+    '("4f79800557fec5f3db08b1643e43931eb0bbbed99db4862ec5611a3e5b46171c"
+       "9c6aa7eb1bde73ba1142041e628827492bd05678df4d9097cda21b1ebcb8f8b9"
+       default))
  '(eglot-ignored-server-capabilities '(:inlayHintProvider))
  '(git-gutter:added-sign "┃")
  '(git-gutter:deleted-sign "┃")
@@ -21,6 +21,7 @@
  '(global-display-line-numbers-mode t)
  '(global-whitespace-mode t)
  '(grep-command "rg -nS --no-heading ")
+ '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
  '(initial-scratch-message nil)
  '(js-indent-level 2)
@@ -32,21 +33,22 @@
  '(lua-ts-indent-continuation-lines nil)
  '(lua-ts-indent-offset 2)
  '(menu-bar-mode nil)
- '(package-selected-packages '(catppuccin-theme emms exec-path-from-shell))
+ '(package-selected-packages '(catppuccin-theme emms exec-path-from-shell slime))
  '(package-vc-selected-packages
-		'((catppuccin-theme :url "https://github.com/catppuccin/emacs" :branch
-				"main")
-			 (odin-ts-mode :url "https://github.com/Sampie159/odin-ts-mode"
-				 :branch "main")
-			 (navigel :url "https://github.com/DamienCassou/navigel" :branch
-				 "master")
-			 (zig-ts-mode :url "https://codeberg.org/meow_king/zig-ts-mode"
-				 :branch "main")
-			 (git-gutter :url "https://github.com/emacsorphanage/git-gutter"
-				 :branch "master")
-			 (gdscript-mode :url
-				 "https://github.com/godotengine/emacs-gdscript-mode" :branch
-				 "master")))
+    '((slime :url "https://github.com/slime/slime.git" :branch "master")
+       (catppuccin-theme :url "https://github.com/catppuccin/emacs"
+         :branch "main")
+       (odin-ts-mode :url "https://github.com/Sampie159/odin-ts-mode"
+         :branch "main")
+       (navigel :url "https://github.com/DamienCassou/navigel" :branch
+         "master")
+       (zig-ts-mode :url "https://codeberg.org/meow_king/zig-ts-mode"
+         :branch "main")
+       (git-gutter :url "https://github.com/emacsorphanage/git-gutter"
+         :branch "master")
+       (gdscript-mode :url
+         "https://github.com/godotengine/emacs-gdscript-mode" :branch
+         "master")))
  '(scroll-bar-mode nil)
  '(split-height-threshold nil)
  '(split-width-threshold nil)
