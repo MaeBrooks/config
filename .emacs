@@ -13,7 +13,7 @@
 
 ;; Macos window ui - transparent, dark mode, and no title bar.
 (when (memq window-system '(mac ns))
-  (let ((alpha 80))
+  (let ((alpha 85))
     (set-frame-parameter nil 'alpha (list alpha alpha)))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
@@ -194,7 +194,9 @@
     :mode "\\.odin\\'"))
 
 ;; Org-mode! Note taking is awesome
-(use-package org :ensure t)
+(use-package org :ensure t
+  :config
+  (setq org-clock-sound "~/.assets/old-phone-ringing.wav"))
 
 ;; Tree sitter setup
 (use-package treesit-fold :ensure t :if (treesit-available-p) :config

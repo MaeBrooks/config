@@ -32,5 +32,8 @@
 !.config/home-manager/home.nix
 !flake.nix
 
+!.assets
+!.assets/*
+
 !README.md
 
