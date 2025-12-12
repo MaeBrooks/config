@@ -33,6 +33,9 @@
  '(lua-ts-indent-continuation-lines nil)
  '(lua-ts-indent-offset 2)
  '(menu-bar-mode nil)
+ '(org-clock-sound "~/.assets/old-phone-ringing.wav")
+ '(org-timer-default-timer "5")
+ '(org-timer-display 'frame-title)
  '(package-selected-packages '(catppuccin-theme emms exec-path-from-shell slime))
  '(package-vc-selected-packages
     '((slime :url "https://github.com/slime/slime.git" :branch "master")

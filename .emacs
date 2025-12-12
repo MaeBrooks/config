@@ -196,7 +196,10 @@
 ;; Org-mode! Note taking is awesome
 (use-package org :ensure t
   :config
-  (setq org-clock-sound "~/.assets/old-phone-ringing.wav"))
+  (defun pomodoro ()
+    (interactive)
+    (if org-timer-start-time (org-timer-stop))
+    (org-timer-set-timer)))
 
 ;; Tree sitter setup
 (use-package treesit-fold :ensure t :if (treesit-available-p) :config
