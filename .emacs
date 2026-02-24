@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(server-start nil t)
 
 (when (< emacs-major-version 30)
   (error "Hey, so, this wont work, use emacs version 30 or higher"))
@@ -13,13 +14,16 @@
 
 ;; Macos window ui - transparent, dark mode, and no title bar.
 (when (memq window-system '(mac ns))
-  (let ((alpha 85))
+  (let ((alpha 80))
     (set-frame-parameter nil 'alpha (list alpha alpha)))
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
-(use-package exec-path-from-shell :ensure t :config
+(use-package exec-path-from-shell
+  :vc (:url "https://github.com/purcell/exec-path-from-shell" :branch master :rev :newest)
+  :ensure t :config
   (exec-path-from-shell-initialize))
+
 
 (use-package catppuccin-theme
   :vc (:url "https://github.com/catppuccin/emacs" :branch main :rev :newest)
@@ -29,12 +33,14 @@
   (catppuccin-load-flavor 'mocha)
 
   (if (x-list-fonts "Hack")
-    (set-frame-font "Hack-18" nil)))
+    (set-frame-font "Hack-17" nil)))
 
 ;; Technically this does "nothing" but make the code a bit cleaner
 (use-package emacs :ensure t :config
   ;; Type y or n instead of yes or no
   (defalias 'yes-or-no-p 'y-or-n-p)
+
+  (global-set-key (kbd "C-x w w") 'ns-prev-frame)
 
   ;; Makes the move a few lines up and down bindings less jarring IMO
   (global-set-key (kbd "M-v") (lambda () (interactive) (previous-line 6)))
@@ -60,9 +66,9 @@
   (defun stream ()
     (interactive)
     (find-file (format "%s%s" (getenv "HOME") "/.notes/stream.org")))
-  (defun docket ()
+  (defun agenda ()
     (interactive)
-    (find-file (format "%s%s" (getenv "HOME") "/.notes/docket.org")))
+    (find-file (format "%s%s" (getenv "HOME") "/.notes/.agenda/agenda.org")))
 
   ;; Often I need to get the full path of a file
   ;; Now you can do so with M-x pwd
@@ -141,8 +147,7 @@
 
 ;; Snippets!
 (use-package yasnippet :ensure t :config
-  (setq yas-snippet-dirs `(,(format "%s/%s" (getenv "HOME") ".emacs.snippets")))
-  (yas-global-mode t))
+  (setq yas-snippet-dirs `(,(format "%s/%s" (getenv "HOME") ".emacs.snippets"))))
 
 (use-package slime
   :vc (:url "https://github.com/slime/slime.git"
@@ -172,7 +177,9 @@
     :ensure t
     :mode "\\.gd$"
     :hook (gdscript-mode . eglot-ensure)
-    :custom (gdscript-eglot-version 3))
+    :custom (gdscript-eglot-version 3)
+    :init
+    (require 'cl))
 
   (use-package zig-mode :ensure t
     :hook (zig-mode . eglot-ensure)
@@ -196,6 +203,9 @@
 ;; Org-mode! Note taking is awesome
 (use-package org :ensure t
   :config
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
   (defun pomodoro ()
     (interactive)
     (if org-timer-start-time (org-timer-stop))
@@ -210,7 +220,7 @@
 
   ;; C language
   (add-ts-grammar 'c "https://github.com/tree-sitter/tree-sitter-c")
-  (add-hook 'c-mode-hook 'c-++-ts-mode)
+  (add-hook 'c-mode-hook 'c-ts-mode)
   ;;
   (add-ts-grammar 'odin "https://github.com/tree-sitter-grammars/tree-sitter-odin")
 
@@ -245,6 +255,10 @@
 ;; purposes
 (use-package eww :ensure t :config
   (global-set-key (kbd "M-s b") 'eww-list-bookmarks))
+
+(use-package ement
+  :vc (:url "https://github.com/alphapapa/ement.el" :branch master :rev :newest)
+  :ensure t)
 
 (defun init-package ()
   "Install missing packages & 'import' package so that you can do M-x package-install"

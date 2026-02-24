@@ -14,6 +14,9 @@
     '("4f79800557fec5f3db08b1643e43931eb0bbbed99db4862ec5611a3e5b46171c"
        "9c6aa7eb1bde73ba1142041e628827492bd05678df4d9097cda21b1ebcb8f8b9"
        default))
+ '(default-frame-alist
+    '((ns-transparent-titlebar . t) (ns-appearance . dark)
+       (undecorated-round . t)))
  '(eglot-ignored-server-capabilities '(:inlayHintProvider))
  '(git-gutter:added-sign "┃")
  '(git-gutter:deleted-sign "┃")
@@ -36,22 +39,20 @@
  '(org-clock-sound "~/.assets/old-phone-ringing.wav")
  '(org-timer-default-timer "5")
  '(org-timer-display 'frame-title)
- '(package-selected-packages '(catppuccin-theme emms exec-path-from-shell slime))
+ '(package-selected-packages
+    '(catppuccin-theme corfu ement exec-path-from-shell gdscript-mode
+       git-gutter kind-icon magit multiple-cursors odin-ts-mode
+       orderless slime treesit-fold vertico yasnippet zig-mode))
  '(package-vc-selected-packages
-    '((slime :url "https://github.com/slime/slime.git" :branch "master")
-       (catppuccin-theme :url "https://github.com/catppuccin/emacs"
-         :branch "main")
-       (odin-ts-mode :url "https://github.com/Sampie159/odin-ts-mode"
-         :branch "main")
-       (navigel :url "https://github.com/DamienCassou/navigel" :branch
-         "master")
-       (zig-ts-mode :url "https://codeberg.org/meow_king/zig-ts-mode"
-         :branch "main")
-       (git-gutter :url "https://github.com/emacsorphanage/git-gutter"
-         :branch "master")
+    '((odin-ts-mode :url "https://github.com/Sampie159/odin-ts-mode"
+        :branch "main")
        (gdscript-mode :url
          "https://github.com/godotengine/emacs-gdscript-mode" :branch
-         "master")))
+         "master")
+       (git-gutter :url "https://github.com/emacsorphanage/git-gutter"
+         :branch "master")
+       (catppuccin-theme :url "https://github.com/catppuccin/emacs"
+         :branch "main")))
  '(scroll-bar-mode nil)
  '(split-height-threshold nil)
  '(split-width-threshold nil)
