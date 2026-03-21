@@ -32,8 +32,8 @@
   (load-theme 'catppuccin :no-confirm)
   (catppuccin-load-flavor 'mocha)
 
-  (if (x-list-fonts "Hack")
-    (set-frame-font "Hack-17" nil)))
+  (if (x-list-fonts "Maple Mono")
+    (set-frame-font "Maple Mono-22" nil)))
 
 ;; Technically this does "nothing" but make the code a bit cleaner
 (use-package emacs :ensure t :config
