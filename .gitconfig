@@ -1,0 +1,12 @@
+[user]
+	name = Mae Brooks
+	email = home_in_the_rain+developer@proton.me
+	signingkey = A02EA71E
+[push]
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[gpg]
+	program = gpg2
+[commit]
+	gpgsign = true
