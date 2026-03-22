@@ -2,38 +2,14 @@
 *
 .config/*
 
-!.Xresources
 !.profile
 !.
 
-
 !.gitignore
-!.guix-packages
-!.emacs
-!.emacs.custom.el
-!.emacs.utils.el
-!.emacs-bongo-cat.gif
-!.wallpaper.png
-!.emacs-icon.png
-!.sunset.svg
-
-!.packages/
-!.packages/lua
-
-!.config/
-!.config/i3/
-!.config/i3/config
-!.config/i3status/config
-!.config/picom/
-!.config/picom/picom.conf
-!.config/rofi/
-!.config/rofi/config.rasi
-!.config/home-manager
-!.config/home-manager/home.nix
-!flake.nix
-
-!.assets
-!.assets/*
+!.emacs.d/
+!.emacs.d/init.el
+!.emacs.d/lisp
+!.emacs.d/lisp/*.el
 
 !README.md
 
