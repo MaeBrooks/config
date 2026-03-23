@@ -10,3 +10,6 @@
 
 ;; Lisp code should indent in sets of 2, instead of the default 8
 (setq lisp-indent-offset 2)
+
+;; Display 
+(which-key-mode)

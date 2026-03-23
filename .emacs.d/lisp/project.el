@@ -10,6 +10,12 @@
 ;;                     g: grep for text in project
 ;;                     d: find directory in project
 ;;                     v: open version control interface (git) for project
+;;
+;; Useful keybinds:
+;; C-x p b: Switch to open buffer in project
+;; C-x p f: find file in project
+;; C-x p d: find directory in project
+;;          (if you want a general, 'open this directory' use: C-x d)
 (require 'project)
 
 ;; Set 'C-x C-f' to multi directory file search
