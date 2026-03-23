@@ -1,9 +1,0 @@
-[submodule ".emacs.packages/magit"]
-	path = .emacs.packages/magit
-	url = https://github.com/magit/magit.git
-[submodule ".emacs.packages/compat"]
-	path = .emacs.packages/compat
-	url = https://github.com/emacs-compat/compat.git
-[submodule ".packages/lua"]
-	path = .packages/lua
-	url = https://github.com/lua/lua
