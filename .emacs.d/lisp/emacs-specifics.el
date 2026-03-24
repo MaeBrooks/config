@@ -1,7 +1,9 @@
 ;; -*- lexical-binding: t -*-
 
 ;; Keep scratch buffers empty
-(setq initial-scratch-message nil)
+(setq initial-scratch-message
+  "Hello! Welcome to the emacs scratch buffer!
+Type 'Ctrl h h' For a quick help popup")
 
 ;; Indent lisp code in the common lisp format
 ;; Anyone reading this confused, really
