@@ -39,6 +39,7 @@
        (project-find-regexp "Find regexp")
        (project-find-dir "Find directory")
        (project-magit-status "Magit" "m")
-       (project-eshell "Eshell"))))
+       (project-eshell "Eshell")
+       (project-compile "Compile"))))
 
 (add-hook 'after-init-hook 'setup-magit)
