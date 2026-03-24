@@ -4,14 +4,42 @@
 ;; node package manager (NPM)
 (require 'transient)
 
-(defun -npm--publish (&optional args)
-  (interactive (list (transient-args 'npm-publish)))
-  ;; Switch to terminal running our npm publish command
+(defun -npm-process (cmd &optional args)
   (switch-to-buffer
     (apply 'make-term
       (append
 	'("npm-process" "npm" nil)
-	(append '("publish") args)))))
+	(append (list cmd) args)))))
+
+(defun -npm--publish (&optional args)
+  "Publishing a package does not default to the project root, it default the path to the current directory"
+  (interactive (list (transient-args 'npm-publish)))
+
+  (let* ((-run t)
+	  ;; (-current-default-directory default-directory)
+	  (-current-file-path (expand-file-name (buffer-file-name (window-buffer (minibuffer-selected-window)))))
+	  (-current-directory (expand-file-name (file-name-parent-directory -current-file-path)))
+	  (-project-directory (expand-file-name (project-root (project-current)))))
+
+    ;; If the project directory is the current directory
+    ;; Check with the user that they do indeed want to publish
+    (when (string= -project-directory -current-directory)
+      (setq -run
+	(y-or-n-p "Current directory is project root. Are you sure you want to publish?")))
+
+    ;; If the current file path is not apart of the current project
+    ;; Ask the user if they really want to publish
+    (if (and -run (not (file-in-directory-p -current-file-path -project-directory)))
+      (setq -run
+	(y-or-n-p
+	  (format
+	    "Folder: %s\nIs not apart of the current project, Are you sure you want to publish?"
+	    -current-directory))))
+
+    ;; Run publish with the current working directory
+    (when -run
+      (setq default-directory -current-directory)
+      (-npm-process "publish" args))))
 
 (transient-define-prefix npm-publish ()
   "Transient for running 'npm publish'"
@@ -25,12 +53,9 @@
 
 (defun -npm--add-user (&optional args)
   (interactive (list (transient-args 'npm-add-user)))
+  (setq default-directory (project-root (project-current)))
   ;; Switch to terminal running our npm add-user command
-  (switch-to-buffer
-    (apply 'make-term
-      (append
-	'("npm-process" "npm" nil)
-	(append '("add-user") args)))))
+  (-npm-process "add-user" args))
 
 (transient-define-prefix npm-add-user ()
   "Transient for running 'npm add-user'"
@@ -45,20 +70,15 @@
 (defun -npm--install (&optional args)
   (interactive (list (transient-args 'npm-install)))
   ;; Switch to terminal running our npm install command
-  (switch-to-buffer
-    (apply 'make-term
-      (append
-	'("npm-process" "npm" nil)
-	(append '("install") args)))))
+  (setq default-directory (project-root (project-current)))
+  (-npm-process "install" args))
 
 (transient-define-prefix npm-install ()
   "Transient for running 'npm install'"
 
   ["Flags"
-    ("v" "Verbose" "--verbose"
-      :always-read t :allow-empty t
-      :init-value (lambda (v) (oset v value "")))
-    ("l" "Legacy Peer Deps" "--legacy-peer-deps")]
+    ("v" "Verbose" "--verbose" :always-read t)
+    ("l" "Legacy Peer Deps" "--legacy-peer-deps" :always-read t)]
 
   ["Commands"
     ("i" "Install" -npm--install)])
@@ -72,10 +92,8 @@
     ("p" "Publish package" npm-publish)])
 
 (defun project-npm ()
-    (interactive)
-    (let ((default-directory (project-root (project-current))))
-      (npm)))
+  (interactive)
+  (npm))
 
 (add-to-list 'project-switch-commands '(project-npm "npm" "n"))
 (global-set-key (kbd "C-x p n") 'project-npm)
-
