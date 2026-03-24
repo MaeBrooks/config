@@ -22,6 +22,6 @@
 (defvar-keymap completion-preview-active-mode-map
   :doc "Keymap for Completion Preview Active mode."
   "C-i" #'completion-preview-insert
-  "Tab" #'completion-preview-complete
+  "<tab>" #'completion-preview-complete
   "M-n" #'completion-preview-next-candidate
   "M-p" #'completion-preview-prev-candidate)
