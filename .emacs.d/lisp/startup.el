@@ -7,4 +7,7 @@
   (lambda ()
     ;; Put stuff you want to run at startup here!
     ;; Ideally, stuff for a regular page
+
+    ;; "Start" emacs with the home directory open in dired - the file explorer
+    (dired "~")
     ))
