@@ -5,3 +5,5 @@
 (require 'cl nil t)
 (loop for file in (directory-files "~/.emacs.d/lisp" t ".el")
   do (load file))
+
+(dired "~")
