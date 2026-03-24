@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t -*-
 
-(load-theme 'misterioso)
+(load-theme 'wombat)
 
 ;; Set the font to be 'Maple Mono' at 22px tall
 ;; You can get the full list of fonts by running:
