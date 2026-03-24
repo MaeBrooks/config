@@ -13,7 +13,7 @@
 (setq column-number-mode t)
 
 ;; Always do this! Not just for files
-(setq global-display-line-numbers-mode t)
+(global-display-line-numbers-mode t)
 
 ;; Show spaces left at the end of the line, like so:
 ;; adasd 
@@ -45,4 +45,19 @@
   ;; the window so much
   (setq split-height-threshold nil)
   (setq split-width-threshold nil))
+
+;; On load, setup the window to be centered
+(let* ((-screen-sizes (frame-monitor-geometry))
+	(-screen-width (caddr -screen-sizes))
+	(-screen-height (cadddr -screen-sizes))
+	(-padding 50)
+	(-width (- -screen-width (* 3 -padding)))
+	(-height (- -screen-height (* 3 -padding)))
+	(-frame (frame-root-frame)))
+  (set-frame-size-and-position-pixelwise
+    -frame
+    -width
+    -height
+    -padding
+    -padding))
 
