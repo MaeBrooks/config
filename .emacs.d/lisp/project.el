@@ -27,6 +27,7 @@
 ;; See the git.el file for more about magit
 (defun setup-magit ()
   (require 'magit)
+  (require 'project)
 
   (defun project-magit-status ()
     (interactive)

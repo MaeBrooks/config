@@ -11,6 +11,26 @@
 	'("npm-process" "npm" nil)
 	(append (list cmd) args)))))
 
+(defun -npm--run (&optional args)
+  ""
+  (interactive (list (transient-args 'npm-run)))
+  (setq default-directory (project-root (project-current)))
+  (-npm-process "run" args))
+
+;; (with-temp-buffer
+;;   (read-file-name)
+;;   (json-parse-buffer))
+
+;; (transient-define-prefix npm-run ()
+;;   "Transient for running 'npm publish'"
+;; 
+;;   ["Flags"
+;;     ;; ("r" "Registry" "--registry=" :allow-empty nil)
+;;     (list ("a" "AA", "--a"))]
+;; 
+;;   ["Commands"
+;;     ("r" "Execute" -npm--run)])
+
 (defun -npm--publish (&optional args)
   "Publishing a package does not default to the project root, it default the path to the current directory"
   (interactive (list (transient-args 'npm-publish)))
@@ -95,5 +115,9 @@
   (interactive)
   (npm))
 
-(add-to-list 'project-switch-commands '(project-npm "npm" "n"))
-(global-set-key (kbd "C-x p n") 'project-npm)
+(add-hook 'after-init-hook
+  (lambda ()
+    (add-to-list 'project-switch-commands '(project-npm "npm" "n"))
+    (global-set-key (kbd "C-x p n") 'project-npm)))
+
+

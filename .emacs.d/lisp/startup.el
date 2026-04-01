@@ -1,13 +1,8 @@
 ;; -*- lexical-binding: t -*-
 
-;; Dont show the default startup screen
-(setq inhibit-startup-screen t)
+;; Set to 't' if you dont want the startup screen
+(setq inhibit-startup-screen nil)
 
-(add-hook 'emacs-startup-hook
-  (lambda ()
-    ;; Put stuff you want to run at startup here!
-    ;; Ideally, stuff for a regular page
+(add-hook 'after-init-hook
+  (lambda () (setq default-directory "~")))
 
-    ;; "Start" emacs with the home directory open in dired - the file explorer
-    (dired "~")
-    ))
