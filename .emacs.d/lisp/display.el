@@ -60,9 +60,3 @@
     -height
     -padding
     -padding))
-
-(let ((-alpha 100))
-  (set-frame-parameter nil 'alpha-background -alpha)
-  (add-to-list 'default-frame-alist (cons 'alpha-background -alpha)))
-
-
